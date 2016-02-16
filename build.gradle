@@ -30,6 +30,11 @@ test {
 	testLogging {
 		exceptionFormat = 'full'
 	}
+	def tmpDir = new File(buildDir, 'tmp')
+	systemProperty 'java.io.tmpdir', tmpDir.canonicalPath
+	doFirst {
+		project.mkdir(tmpDir)
+	}
 }
 
 jarAttributes {
@@ -71,9 +76,17 @@ task createPluginClasspath {
 		outputDir.mkdirs()
 		file("${outputDir}/plugin-classpath.txt").text = sourceSets.main.runtimeClasspath.join("\n")
 	}
-	test.dependsOn it
+	processTestResources.dependsOn it
 }
 
 dependencies {
 	testCompile files(createPluginClasspath)
 }
+
+task copyJavaTestClassesToResources(type: Copy) {
+	def pl = project.convention.getPlugin(JavaPluginConvention)
+	from pl.sourceSets.findByName(SourceSet.TEST_SOURCE_SET_NAME).allJava
+	into pl.sourceSets.findByName(SourceSet.TEST_SOURCE_SET_NAME).output.resourcesDir
+	project.tasks.findByName('processTestResources').dependsOn(it)
+}
+
