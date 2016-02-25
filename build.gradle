@@ -37,6 +37,18 @@ test {
 	}
 }
 
+/*
+  * Make sure our DSL helper file makes it into the jar for IDE auto-complete
+  */
+def stageGroovyDSL = tasks.create('stageGroovyDSL', Copy).with {
+	from(sourceSets.main.allSource) {
+		include '**/*.gdsl'
+	}
+	into sourceSets.main.output.classesDir
+	it
+}
+tasks.findByName('jar')?.dependsOn stageGroovyDSL
+
 jarAttributes {
 	'jdk-vendor' Runtime.class.package.implementationVendor
 	'jdk-version' sysprop('java.version')

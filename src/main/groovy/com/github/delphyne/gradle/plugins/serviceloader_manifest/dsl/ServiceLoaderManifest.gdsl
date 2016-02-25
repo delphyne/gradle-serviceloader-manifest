@@ -4,7 +4,7 @@ def buildScript = context(scriptType: 'gradle')
 def project = context(ctype: 'org.gradle.api.Project')
 
 contributor([buildScript, project]) {
-	method name: 'serviceLoader', type: 'com.github.delphyne.gradle.plugins.serviceloader_manifest.extensions.ServiceLoaderManifestExtension', params: [closure: 'groovy.lang.Closure']
+	method name: 'serviceLoader', type: 'void', params: [closure: 'groovy.lang.Closure']
 	property name: 'serviceLoader', type: 'com.github.delphyne.gradle.plugins.serviceloader_manifest.extensions.ServiceLoaderManifestExtension'
 }
 
